@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abdelaziz AKKEB — Tech Product Manager</title>
+<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700;800;900&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F6F3;
+    --white: #FFFFFF;
+    --surface: #F0EEE8;
+    --border: #E4E1D8;
+    --border-strong: #CCC9BE;
+    --ink: #1A1916;
+    --ink-2: #3D3C38;
+    --ink-3: #7A786E;
+    --ink-4: #A8A69E;
+    --accent: #1D4ED8;
+    --accent-light: #EEF2FF;
+    --accent-border: #C7D2FE;
+    --green: #059669;
+    --green-light: #ECFDF5;
+    --green-border: #A7F3D0;
+    --amber: #D97706;
+    --amber-light: #FFFBEB;
+    --amber-border: #FDE68A;
+    --red: #DC2626;
+    --red-light: #FEF2F2;
+    --red-border: #FECACA;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 13.5px;
+    line-height: 1.6;
+  }
+
+  .page {
+    width: 1160px;
+    margin: 0 auto;
+    padding: 52px 56px 64px;
+    background: var(--white);
+    min-height: 100vh;
+  }
+
+  /* ══ HEADER ══ */
+  .header {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 36px;
+    align-items: start;
+    padding-bottom: 40px;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 44px;
+  }
+
+  .photo-wrap {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid var(--border-strong);
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .photo-initials {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--accent);
+    letter-spacing: -1px;
+  }
+
+  .header-center {}
+
+  .name {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 52px;
+    font-weight: 900;
+    letter-spacing: -2.5px;
+    line-height: 1;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .title-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .title {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink-2);
+    letter-spacing: 0.2px;
+  }
+
+  .title-sep {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--ink-4);
+  }
+
+  .title-sub {
+    font-size: 13px;
+    color: var(--ink-3);
+    font-weight: 400;
+  }
+
+  .contact-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .contact-item {
+    font-size: 12.5px;
+    color: var(--ink-3);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .contact-icon {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    background: var(--accent-light);
+    border: 1px solid var(--accent-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .header-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    padding-top: 6px;
+  }
+
+  .avail-badge {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--green);
+    background: var(--green-light);
+    border: 1px solid var(--green-border);
+    padding: 6px 14px;
+    border-radius: 100px;
+  }
+
+  .avail-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+  }
+
+  .cert-badges {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: flex-end;
+  }
+
+  .cert-b {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+
+  .cert-b.blue { background: var(--accent-light); color: var(--accent); border: 1px solid var(--accent-border); }
+  .cert-b.amber { background: var(--amber-light); color: var(--amber); border: 1px solid var(--amber-border); }
+
+  /* ══ SUMMARY ══ */
+  .summary-block {
+    background: var(--ink);
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin-bottom: 40px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 32px;
+    align-items: center;
+  }
+
+  .summary-text {
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.85);
+    font-weight: 400;
+    font-style: italic;
+  }
+
+  .summary-text strong {
+    color: #fff;
+    font-style: normal;
+    font-weight: 600;
+  }
+
+  .summary-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .stat-item {
+    text-align: right;
+  }
+
+  .stat-val {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 26px;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1;
+    letter-spacing: -1px;
+  }
+
+  .stat-lab {
+    font-size: 10.5px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.3px;
+  }
+
+  /* ══ MAIN LAYOUT ══ */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 44px;
+    align-items: start;
+  }
+
+  /* ══ SECTION TITLES ══ */
+  .section { margin-bottom: 40px; }
+
+  .sec-title {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .sec-title::before {
+    content: '';
+    width: 20px;
+    height: 2px;
+    background: var(--ink);
+    flex-shrink: 0;
+  }
+
+  /* ══ METRICS ══ */
+  .metrics-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 40px;
+  }
+
+  .metric-card {
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    background: var(--white);
+    transition: border-color 0.2s;
+  }
+
+  .m-val {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: -1px;
+    line-height: 1;
+    margin-bottom: 5px;
+  }
+
+  .m-val.blue { color: var(--accent); }
+  .m-val.green { color: var(--green); }
+  .m-val.amber { color: var(--amber); }
+  .m-val.ink { color: var(--ink); }
+
+  .m-lab {
+    font-size: 11px;
+    color: var(--ink-3);
+    line-height: 1.35;
+  }
+
+  /* ══ EXP CARDS ══ */
+  .exp-card {
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 24px 24px 20px;
+    margin-bottom: 14px;
+    background: var(--white);
+    position: relative;
+  }
+
+  .exp-card.current {
+    border-color: var(--accent-border);
+    background: #FAFBFF;
+  }
+
+  .exp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 2px;
+  }
+
+  .exp-title {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--ink);
+    letter-spacing: -0.3px;
+  }
+
+  .exp-period {
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 100px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .exp-period.current {
+    background: var(--accent-light);
+    color: var(--accent);
+    border: 1px solid var(--accent-border);
+  }
+
+  .exp-period.past {
+    background: var(--surface);
+    color: var(--ink-3);
+    border: 1px solid var(--border);
+  }
+
+  .exp-company {
+    font-size: 12.5px;
+    color: var(--ink-3);
+    margin-bottom: 16px;
+    font-weight: 400;
+  }
+
+  .exp-company b {
+    color: var(--ink-2);
+    font-weight: 600;
+  }
+
+  .sub-title {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--ink-4);
+    margin: 14px 0 8px;
+  }
+
+  .bullets {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .bullets li {
+    font-size: 13px;
+    color: var(--ink-2);
+    line-height: 1.55;
+    padding-left: 14px;
+    position: relative;
+  }
+
+  .bullets li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 5px;
+    height: 1.5px;
+    background: var(--ink-3);
+  }
+
+  .bullets.achiev li::before {
+    background: var(--accent);
+  }
+
+  .bullets.achiev li {
+    color: var(--ink);
+  }
+
+  .stage-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--amber-light);
+    color: var(--amber);
+    border: 1px solid var(--amber-border);
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  /* ══ EDUCATION ══ */
+  .edu-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .edu-card {
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    background: var(--white);
+  }
+
+  .edu-degree {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 13.5px;
+    font-weight: 800;
+    color: var(--ink);
+    margin-bottom: 3px;
+    line-height: 1.3;
+  }
+
+  .edu-school {
+    font-size: 12px;
+    color: var(--ink-3);
+    margin-bottom: 8px;
+  }
+
+  .edu-year {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    background: var(--accent-light);
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--accent-border);
+  }
+
+  .edu-card.bac {
+    grid-column: span 2;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 14px 20px;
+  }
+
+  .edu-card.bac .edu-degree { font-size: 12.5px; margin-bottom: 2px; }
+
+  /* ══ SIDEBAR ══ */
+  .sidebar-sec { margin-bottom: 28px; }
+
+  .side-title {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .side-title::before {
+    content: '';
+    width: 14px;
+    height: 2px;
+    background: var(--ink);
+    flex-shrink: 0;
+  }
+
+  /* Skill groups */
+  .skill-group { margin-bottom: 14px; }
+
+  .skill-group-name {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--ink-2);
+    margin-bottom: 7px;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .tag {
+    font-size: 11.5px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1.5px solid var(--border);
+    color: var(--ink-2);
+    background: var(--white);
+    font-weight: 400;
+  }
+
+  .tag.hl {
+    background: var(--accent-light);
+    border-color: var(--accent-border);
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* Tools */
+  .tools-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+  }
+
+  .tool {
+    font-size: 12px;
+    padding: 7px 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--ink-2);
+    font-weight: 400;
+  }
+
+  /* Cert */
+  .cert-card {
+    padding: 11px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 7px;
+    font-size: 12.5px;
+    color: var(--ink-2);
+    line-height: 1.4;
+  }
+
+  .cert-card strong {
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  /* Lang */
+  .lang-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .lang-row:last-child { border-bottom: none; }
+
+  .lang-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .lang-lv {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 100px;
+  }
+
+  .lang-lv.nat { background: var(--green-light); color: var(--green); border: 1px solid var(--green-border); }
+  .lang-lv.bil { background: var(--accent-light); color: var(--accent); border: 1px solid var(--accent-border); }
+
+  /* Soft */
+  .soft-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+
+  .soft-tag {
+    font-size: 11.5px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--ink-2);
+  }
+
+  /* ══ FOOTER ══ */
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1.5px solid var(--border);
+  }
+
+  .footer-name {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--ink-3);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .footer-contact {
+    font-size: 12px;
+    color: var(--ink-3);
+  }
+
+  .footer-year {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink-4);
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ══ HEADER ══ -->
+  <header class="header">
+    <div class="photo-wrap">
+      <div class="photo-initials">AA</div>
+    </div>
+
+    <div class="header-center">
+      <div class="name">Abdelaziz AKKEB</div>
+      <div class="title-row">
+        <span class="title">Tech Product Manager</span>
+        <span class="title-sep"></span>
+        <span class="title-sub">IA &amp; Solutions Industrielles · 4+ ans</span>
+      </div>
+      <div class="contact-row">
+        <div class="contact-item">
+          <div class="contact-icon">@</div>
+          aziz.akkeb@gmail.com
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">☏</div>
+          +33 6 35 25 65 65
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">⌖</div>
+          Lyon 07, France
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">♟</div>
+          29 ans
+        </div>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <div class="avail-badge">
+        <div class="avail-dot"></div>
+        Disponible
+      </div>
+      <div class="cert-badges">
+        <div class="cert-b blue">SAFe® 6 Certified</div>
+        <div class="cert-b amber">Lean Six Sigma GB</div>
+        <div class="cert-b blue">TOEIC 960 / 990</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══ SUMMARY BLOCK ══ -->
+  <div class="summary-block">
+    <p class="summary-text">
+      Product Manager trilingue avec <strong>plus de 4 ans d'expérience</strong> dans le pilotage de produits industriels combinant <strong>IA, software et hardware</strong>. Fort focus sur la performance opérationnelle, la qualité produit et l'adoption à grande échelle. Je transforme des besoins terrain complexes en <strong>solutions robustes et industrialisables</strong>, au plus près des équipes techniques et business.
+    </p>
+    <div class="summary-stats">
+      <div class="stat-item">
+        <div class="stat-val">4+</div>
+        <div class="stat-lab">ans d'expérience</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">22</div>
+        <div class="stat-lab">déploiements</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">3</div>
+        <div class="stat-lab">langues</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ METRICS ══ -->
+  <div class="metrics-row">
+    <div class="metric-card">
+      <div class="m-val green">14j → 8min</div>
+      <div class="m-lab">Inspection last mile leader mondial (95% → 100% flotte)</div>
+    </div>
+    <div class="metric-card">
+      <div class="m-val blue">70% → 95%</div>
+      <div class="m-lab">Taux de détection défauts (précision & recall)</div>
+    </div>
+    <div class="metric-card">
+      <div class="m-val amber">14% → 3%</div>
+      <div class="m-lab">Taux d'immobilisation véhicules réduit</div>
+    </div>
+    <div class="metric-card">
+      <div class="m-val ink">6 pilotes</div>
+      <div class="m-lab">validés en 2 ans — Europe, Afrique, Proche Orient</div>
+    </div>
+  </div>
+
+  <!-- ══ MAIN GRID ══ -->
+  <div class="main-grid">
+
+    <!-- LEFT -->
+    <div>
+
+      <!-- EXPÉRIENCE -->
+      <div class="section">
+        <div class="sec-title">Expérience Professionnelle</div>
+
+        <!-- EXP 1 -->
+        <div class="exp-card current">
+          <div class="exp-header">
+            <div class="exp-title">Tech Product Manager</div>
+            <div class="exp-period current">Août 2023 – Aujourd'hui</div>
+          </div>
+          <div class="exp-company"><b>ProovStation</b> · Lyon, France</div>
+
+          <div class="sub-title">Responsabilités</div>
+          <ul class="bullets">
+            <li>Pilotage de produits d'inspection automobile par IA : computer vision, IA embarquée, capteurs hardware &amp; software cloud</li>
+            <li>Définition de la vision produit et roadmap alignée sur les objectifs business et contraintes d'industrialisation</li>
+            <li>Gestion du backlog, sprints et coordination delivery en environnement Agile / SAFe</li>
+            <li>Pilotage des risques, suivi budgétaire et arbitrage des priorités produit</li>
+            <li>Coordination transverse : équipes tech, data, UX, métiers, marketing et partenaires industriels</li>
+            <li>Contribution aux phases d'avant-vente, audits de faisabilité et intégration aux SI clients</li>
+          </ul>
+
+          <div class="sub-title">Accomplissements clés</div>
+          <ul class="bullets achiev">
+            <li>Déploiement de solutions IA industrielles auprès de leaders internationaux : loueurs, logisticiens, OEM</li>
+            <li>6 pilotes validés en 2 ans — structuration de solutions robustes et réplicables à grande échelle</li>
+            <li>Process last mile du leader mondial : 95% flotte contrôlée en 14j → 100% en 8 min</li>
+            <li>Taux de précision et de rappel (Recall) supérieurs à 95%</li>
+            <li>API universelle garantissant interopérabilité, scalabilité produit et adoption clients</li>
+          </ul>
+        </div>
+
+        <!-- EXP 2 -->
+        <div class="exp-card">
+          <div class="exp-header">
+            <div class="exp-title">Product Owner / Project Manager – Produits IA</div>
+            <div class="exp-period past">Août 2021 – Août 2023</div>
+          </div>
+          <div class="exp-company"><b>ProovStation</b> · Lyon, France</div>
+
+          <div class="sub-title">Responsabilités</div>
+          <ul class="bullets">
+            <li>Pilotage de projets transverses hardware &amp; software de bout en bout</li>
+            <li>Déploiements produits : pré-vente, installation, formation, support et amélioration continue</li>
+            <li>Interface entre clients (OEM, concessions, logistique) et équipes internes</li>
+            <li>Suivi roadmap, priorisation des features, reporting KPI et coordination ressources</li>
+          </ul>
+
+          <div class="sub-title">Accomplissements clés</div>
+          <ul class="bullets achiev">
+            <li>22 déploiements à travers l'Europe, l'Afrique et le Proche Orient</li>
+            <li>Réduction temps d'inspection : 17j→2h30 (reconditionnement) · 24h→24s (atelier) · 35min→quelques min (carrosserie)</li>
+            <li>Réduction du taux d'immobilisation de 14% à 3%</li>
+            <li>Amélioration des taux de détection de défauts de 70% à 95%</li>
+          </ul>
+        </div>
+
+        <!-- EXP 3 -->
+        <div class="exp-card">
+          <div class="exp-header">
+            <div class="exp-title">Customer Success Manager <span class="stage-tag">Stage</span></div>
+            <div class="exp-period past">Mars – Août 2021</div>
+          </div>
+          <div class="exp-company"><b>ProovStation</b> · Lyon, France</div>
+          <ul class="bullets" style="margin-top:8px">
+            <li>Accompagnement clients dans l'adoption des solutions industrielles</li>
+            <li>Support opérationnel et remontée structurée des besoins utilisateurs</li>
+            <li>Contribution à l'amélioration de la qualité de service et des processus client</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- FORMATION -->
+      <div class="section">
+        <div class="sec-title">Formation</div>
+        <div class="edu-grid">
+          <div class="edu-card">
+            <div class="edu-degree">Master of International Business (MIB)</div>
+            <div class="edu-school">ESSCA Angers &amp; Budapest · Double diplôme Ingénieur-Manager</div>
+            <div class="edu-year">2021</div>
+          </div>
+          <div class="edu-card">
+            <div class="edu-degree">Diplôme d'Ingénieur Généraliste</div>
+            <div class="edu-school">ECAM Rennes · Génie Industriel &amp; Informatique</div>
+            <div class="edu-year">2020</div>
+          </div>
+          <div class="edu-card bac">
+            <div>
+              <div class="edu-degree">Baccalauréat Scientifique – Mention Bien</div>
+              <div class="edu-school">Lycée Français International de Dubaï</div>
+            </div>
+            <div class="edu-year" style="flex-shrink:0">2015</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT SIDEBAR -->
+    <div>
+
+      <div class="sidebar-sec">
+        <div class="side-title">Compétences</div>
+        <div class="skill-group">
+          <div class="skill-group-name">Méthodologies</div>
+          <div class="tags">
+            <div class="tag hl">Agile &amp; Scrum</div>
+            <div class="tag hl">SAFe</div>
+            <div class="tag">Roadmap produit</div>
+            <div class="tag">Data-driven</div>
+            <div class="tag">Lean Six Sigma</div>
+            <div class="tag">Cycles itératifs</div>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-name">Technologies</div>
+          <div class="tags">
+            <div class="tag hl">Computer Vision</div>
+            <div class="tag hl">IA embarquée</div>
+            <div class="tag">Capteurs industriels</div>
+            <div class="tag">API / REST</div>
+            <div class="tag">SQL / GraphQL</div>
+            <div class="tag">UX / UI</div>
+            <div class="tag">Cloud</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-sec">
+        <div class="side-title">Outils</div>
+        <div class="tools-list">
+          <div class="tool">Jira</div>
+          <div class="tool">Figma</div>
+          <div class="tool">ClickUp</div>
+          <div class="tool">Notion</div>
+          <div class="tool">Power BI</div>
+          <div class="tool">Google Data</div>
+          <div class="tool">MS Office</div>
+          <div class="tool">SQL</div>
+        </div>
+      </div>
+
+      <div class="sidebar-sec">
+        <div class="side-title">Certifications</div>
+        <div class="cert-card"><strong>SAFe® 6</strong><br>Product Owner / Product Manager</div>
+        <div class="cert-card"><strong>Lean Six Sigma</strong><br>Green Belt</div>
+        <div class="cert-card"><strong>TOEIC</strong><br>Score : 960 / 990</div>
+      </div>
+
+      <div class="sidebar-sec">
+        <div class="side-title">Langues</div>
+        <div class="lang-row">
+          <span class="lang-name">Français</span>
+          <span class="lang-lv nat">Natif</span>
+        </div>
+        <div class="lang-row">
+          <span class="lang-name">Anglais</span>
+          <span class="lang-lv bil">Bilingue</span>
+        </div>
+        <div class="lang-row">
+          <span class="lang-name">Arabe</span>
+          <span class="lang-lv nat">Natif</span>
+        </div>
+      </div>
+
+      <div class="sidebar-sec">
+        <div class="side-title">Savoir-être</div>
+        <div class="soft-tags">
+          <div class="soft-tag">Leadership collaboratif</div>
+          <div class="soft-tag">Énergie &amp; proactivité</div>
+          <div class="soft-tag">Orientation résultats</div>
+          <div class="soft-tag">Esprit structuré</div>
+          <div class="soft-tag">Capacité d'analyse</div>
+          <div class="soft-tag">Créativité pragmatique</div>
+          <div class="soft-tag">Culture produit</div>
+          <div class="soft-tag">Communication transverse</div>
+          <div class="soft-tag">Curiosité professionnelle</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ FOOTER ══ -->
+  <div class="footer">
+    <div class="footer-name">Abdelaziz Akkeb · Tech Product Manager</div>
+    <div class="footer-contact">aziz.akkeb@gmail.com · Lyon, France</div>
+    <div class="footer-year">2026</div>
+  </div>
+
+</div>
+</body>
+</html>
