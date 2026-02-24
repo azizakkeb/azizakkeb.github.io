@@ -58,12 +58,20 @@
     --summary-text: rgba(255,255,255,0.75);
   }
 
-  /* ══ TOGGLE BUTTON ══ */
-  .theme-toggle {
+  /* ══ BOUTONS GROUPE ══ */
+  .btn-group {
     position: fixed;
     top: 20px;
     right: 24px;
     z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+  }
+
+  /* ══ TOGGLE BUTTON ══ */
+  .theme-toggle {
     background: var(--white);
     border: 1.5px solid var(--border-strong);
     border-radius: 100px;
@@ -757,10 +765,6 @@
 
   /* ══ THEME BUTTON ══ */
   .theme-btn {
-    position: fixed;
-    top: 56px;
-    right: 24px;
-    z-index: 1000;
     background: var(--white);
     border: 1.5px solid var(--border-strong);
     border-radius: 100px;
@@ -940,15 +944,16 @@
 </head>
 <body>
 
-<button class="theme-toggle" id="themeBtn" onclick="toggleTheme()" title="Changer de thème">
-  <span class="toggle-icon" id="toggle-icon">🌙</span>
-  <span class="toggle-label" id="toggle-label">Dark mode</span>
-</button>
-
-<button class="theme-btn" id="paletteBtn" onclick="togglePalette()" title="Changer de palette">
-  <span id="palette-icon">🌿</span>
-  <span class="btn-label" id="palette-label">Thème bleu</span>
-</button>
+<div class="btn-group">
+  <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()" title="Changer de thème">
+    <span class="toggle-icon" id="toggle-icon">🌙</span>
+    <span class="toggle-label" id="toggle-label">Dark mode</span>
+  </button>
+  <button class="theme-btn" id="paletteBtn" onclick="togglePalette()" title="Changer de palette">
+    <span id="palette-icon">🌿</span>
+    <span class="btn-label" id="palette-label">Thème bleu</span>
+  </button>
+</div>
 
 <script>
   let isBlue = false;
