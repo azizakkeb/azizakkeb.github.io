@@ -478,7 +478,7 @@
   }
 
   .bullets.achiev li {
-    color: var(--ink);
+    color: var(--ink-2);
   }
 
   .stage-tag {
@@ -705,6 +705,113 @@
     font-weight: 700;
     color: var(--ink-4);
   }
+
+  .dark .exp-card {
+    background: #1A1A26;
+    border-color: rgba(255,255,255,0.1);
+  }
+
+  .dark .exp-card.current {
+    background: #1A1D2E;
+    border-color: rgba(129,140,248,0.25);
+  }
+
+  .dark .bullets li {
+    color: #C8C6DE;
+  }
+
+  .dark .bullets.achiev li {
+    color: #E8E6F8;
+  }
+
+  .dark .sub-title {
+    color: #6B697F;
+  }
+  @media (max-width: 900px) {
+    .page {
+      width: 100%;
+      padding: 28px 20px 48px;
+    }
+
+    .theme-toggle {
+      top: 12px;
+      right: 12px;
+      padding: 6px 12px;
+      font-size: 11px;
+    }
+
+    /* Header empilé */
+    .header {
+      grid-template-columns: auto 1fr;
+      grid-template-rows: auto auto;
+      gap: 20px;
+      padding-bottom: 28px;
+      margin-bottom: 28px;
+    }
+
+    .header-right {
+      grid-column: 1 / -1;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cert-badges {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+    .name { font-size: 36px; letter-spacing: -1.5px; }
+    .photo-wrap { width: 80px; height: 80px; }
+
+    /* Summary block colonne unique */
+    .summary-block {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .summary-stats {
+      flex-direction: row;
+      justify-content: space-around;
+    }
+
+    .stat-item { text-align: center; }
+
+    /* Metrics 2 colonnes */
+    .metrics-row {
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+
+    /* Main grid colonne unique — sidebar passe en bas */
+    .main-grid {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    /* Education 1 colonne */
+    .edu-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .edu-card.bac { grid-column: span 1; }
+
+    /* Footer empilé */
+    .footer {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .name { font-size: 28px; }
+    .metrics-row { grid-template-columns: 1fr; }
+    .tools-list { grid-template-columns: 1fr 1fr; }
+    .contact-row { gap: 10px; }
+  }
 </style>
 </head>
 <body>
@@ -764,7 +871,7 @@
       </div>
       <div class="cert-badges">
         <div class="cert-b blue">SAFe® 6 Certified</div>
-        <div class="cert-b amber">Lean Six Sigma GB</div>
+        <div class="cert-b amber">AI-Augmented PM</div>
         <div class="cert-b blue">TOEIC 960 / 990</div>
       </div>
     </div>
