@@ -76,14 +76,34 @@
     font-size: 12px;
     font-weight: 700;
     color: var(--ink-2);
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    overflow: hidden;
+    white-space: nowrap;
   }
 
   .theme-toggle:hover {
     border-color: var(--accent);
     color: var(--accent);
     box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  }
+
+  .theme-toggle.collapsed {
+    padding: 8px 10px;
+    gap: 0;
+  }
+
+  .toggle-label {
+    display: inline-block;
+    max-width: 80px;
+    opacity: 1;
+    transition: max-width 0.3s ease, opacity 0.3s ease;
+    overflow: hidden;
+  }
+
+  .theme-toggle.collapsed .toggle-label {
+    max-width: 0;
+    opacity: 0;
   }
 
   .toggle-icon { font-size: 14px; transition: transform 0.4s ease; }
@@ -816,17 +836,27 @@
 </head>
 <body>
 
-<button class="theme-toggle" onclick="toggleTheme()" title="Changer de thème">
+<button class="theme-toggle" id="themeBtn" onclick="toggleTheme()" title="Changer de thème">
   <span class="toggle-icon" id="toggle-icon">🌙</span>
-  <span id="toggle-label">Dark mode</span>
+  <span class="toggle-label" id="toggle-label">Dark mode</span>
 </button>
 
 <script>
+  // Collapse bouton après 600ms
+  setTimeout(() => {
+    document.getElementById('themeBtn').classList.add('collapsed');
+  }, 600);
+
   function toggleTheme() {
     const body = document.body;
     const isDark = body.classList.toggle('dark');
     document.getElementById('toggle-icon').textContent = isDark ? '☀️' : '🌙';
     document.getElementById('toggle-label').textContent = isDark ? 'Light mode' : 'Dark mode';
+
+    // Ré-expand puis re-collapse
+    const btn = document.getElementById('themeBtn');
+    btn.classList.remove('collapsed');
+    setTimeout(() => btn.classList.add('collapsed'), 600);
   }
 </script>
 <div class="page">
