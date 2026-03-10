@@ -96,8 +96,10 @@
       opacity: 0.6;
     }
 
-    .console.off .power-btn { pointer-events: none; opacity: 0.4; }
-    .console.off .btn-face  { pointer-events: none; opacity: 0.3; }
+    .console.off .power-btn { pointer-events: none !important; opacity: 0.4; }
+    .console.off .btn-face  { pointer-events: none !important; opacity: 0.3; }
+    .console:not(.off) .power-btn { pointer-events: auto !important; opacity: 1; }
+    .console:not(.off) .btn-face  { pointer-events: auto !important; opacity: 1; }
 
     .console.booting .screen {
       animation: bootFlicker 0.8s ease forwards;
@@ -142,6 +144,8 @@
       50%      { opacity:0.7; }
     }
     .plug-hint.hidden { opacity:0; pointer-events:none; transition: opacity 0.5s ease; }
+
+
 
     /* Vis */
     .screw {
@@ -460,44 +464,82 @@
 
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Spotlight souris sur l'écran
+// ── GLOBAL ──
+function launchCV() {
+  const body = document.getElementById('consoleBody');
+  if (body && body.classList.contains('off')) return;
+  const flash = document.getElementById('flashOverlay');
+  const out   = document.getElementById('pageOut');
+  flash.classList.add('flash');
+  setTimeout(() => flash.classList.remove('flash'), 150);
+  setTimeout(() => {
+    out.classList.add('fade');
+    setTimeout(() => { window.location.href = 'CV_Portfolio_Aziz_Akkeb_Light.html'; }, 450);
+  }, 120);
+}
+
+function playClick(freq) {
+  try {
+    const ctx  = new (window.AudioContext || window.webkitAudioContext)();
+    const osc  = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(freq * 0.5, ctx.currentTime + 0.08);
+    gain.gain.setValueAtTime(0.18, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+    osc.start(); osc.stop(ctx.currentTime + 0.12);
+  } catch(e) {}
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+
+  // ── CONSOLE ON/OFF ──
+  function bootConsole() {
+    const body = document.getElementById('consoleBody');
+    const hint = document.getElementById('plugHint');
+    if (!body.classList.contains('off')) return;
+    hint.classList.add('hidden');
+    body.classList.add('booting');
+    setTimeout(() => {
+      body.classList.remove('off', 'booting');
+    }, 900);
+  }
+
+  function shutdownConsole() {
+    const body = document.getElementById('consoleBody');
+    const hint = document.getElementById('plugHint');
+    if (body.classList.contains('off')) return;
+    body.classList.add('off');
+    hint.classList.remove('hidden');
+  }
+
+  // ── SPOTLIGHT ÉCRAN ──
   const screenEl = document.querySelector('.screen');
   screenEl.addEventListener('mousemove', e => {
-    const rect = screenEl.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    screenEl.style.setProperty('--mx', x + 'px');
-    screenEl.style.setProperty('--my', y + 'px');
+    const r = screenEl.getBoundingClientRect();
+    const x = e.clientX - r.left, y = e.clientY - r.top;
     screenEl.style.background = `
       radial-gradient(circle 80px at ${x}px ${y}px, rgba(255,255,255,0.13) 0%, transparent 70%),
       radial-gradient(circle 200px at ${x}px ${y}px, rgba(61,107,79,0.18) 0%, transparent 100%),
-      linear-gradient(135deg, #2A2A2A 0%, #181818 60%, #222 100%)
-    `;
+      linear-gradient(135deg, #2A2A2A 0%, #181818 60%, #222 100%)`;
   });
   screenEl.addEventListener('mouseleave', () => {
     screenEl.style.background = 'linear-gradient(135deg, #2A2A2A 0%, #181818 60%, #222 100%)';
   });
 
-
-  // ── CÂBLE INTERACTIF AVEC INERTIE ──
+  // ── CÂBLE ──
   const jackWrap  = document.getElementById('jackWrap');
   const cablePath = document.getElementById('cablePath');
-
   let jackX = 0, jackY = 0;
-  let velX = 0, velY = 0;
-  let prevX = 0, prevY = 0;
-  let prevTime = 0;
-  let isDragging = false;
-  let isSnapped  = true;
-  let animFrame  = null;
-  const SNAP_RADIUS = 48;
-  const FRICTION    = 0.92;
-  const BOUNCE      = 0.3;
+  let velX = 0, velY = 0, prevX = 0, prevY = 0, prevTime = 0;
+  let isDragging = false, isSnapped = true, animFrame = null;
+  const SNAP_RADIUS = 48, FRICTION = 0.92;
 
-  function getConsoleTopCenter() {
-    const rect = document.querySelector('.console-wrap').getBoundingClientRect();
-    return { x: rect.left + rect.width / 2, y: rect.top };
+  function getSnapTarget() {
+    const r = document.querySelector('.console-wrap').getBoundingClientRect();
+    return { x: r.left + r.width / 2, y: r.top };
   }
 
   function positionJack(x, y) {
@@ -508,230 +550,133 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function drawCable(x2, y2) {
     const x1 = window.innerWidth / 2, y1 = 0;
-    const dy = Math.abs(y2 - y1);
-    const slack = Math.min(dy * 0.5 + 30, 80);
-    cablePath.setAttribute('d',
-      `M ${x1} ${y1} C ${x1} ${y1 + slack}, ${x2} ${y2 - slack * 0.3}, ${x2} ${y2}`
-    );
+    const slack = Math.min(Math.abs(y2 - y1) * 0.5 + 30, 80);
+    cablePath.setAttribute('d', `M ${x1} ${y1} C ${x1} ${y1+slack}, ${x2} ${y2-slack*0.3}, ${x2} ${y2}`);
   }
 
   function snapToConsole() {
     cancelAnimationFrame(animFrame);
-    const target = getConsoleTopCenter();
-    isSnapped = true;
-    velX = 0; velY = 0;
+    const t = getSnapTarget();
+    isSnapped = true; velX = 0; velY = 0;
     jackWrap.classList.add('snapped');
-    positionJack(target.x, target.y);
-    drawCable(target.x, target.y);
+    positionJack(t.x, t.y);
+    drawCable(t.x, t.y);
     setTimeout(() => jackWrap.classList.remove('snapped'), 350);
-    // Allumer la console
     bootConsole();
   }
 
-  function bootConsole() {
-    const body = document.getElementById('consoleBody');
-    const hint = document.getElementById('plugHint');
-    if (!body.classList.contains('off')) return;
-    hint.classList.add('hidden');
-    body.classList.add('booting');
-    setTimeout(() => {
-      body.classList.remove('off');
-      body.classList.remove('booting');
-      // S'assurer que les boutons sont cliquables
-      document.getElementById('powerBtn').style.pointerEvents = 'auto';
-    }, 900);
+  function initPos() {
+    const t = getSnapTarget();
+    positionJack(t.x, t.y);
+    drawCable(t.x, t.y);
   }
 
-  function shutdownConsole() {
-    const body = document.getElementById('consoleBody');
-    const hint = document.getElementById('plugHint');
-    if (body.classList.contains('off')) return;
-    document.getElementById('powerBtn').style.pointerEvents = 'none';
-    body.classList.add('off');
-    hint.classList.remove('hidden');
-  }
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    initPos();
+    setTimeout(startSwing, 1000);
+  }));
+  window.addEventListener('resize', () => { if (isSnapped) initPos(); });
 
-  function initPositions() {
-    const top = getConsoleTopCenter();
-    positionJack(top.x, top.y);
-    drawCable(top.x, top.y);
-  }
-
-  requestAnimationFrame(() => requestAnimationFrame(initPositions));
-  window.addEventListener('resize', () => { if (isSnapped) initPositions(); });
-
-  // ── INERTIE COURTE ──
+  // ── PHYSIQUE ──
   function physics() {
     if (isDragging) return;
-
-    velX *= FRICTION;
-    velY *= FRICTION;
-
-    // Stopper dès que la vitesse est négligeable
-    if (Math.abs(velX) < 0.1 && Math.abs(velY) < 0.1) {
-      velX = 0; velY = 0;
-      return;
-    }
-
-    jackX += velX;
-    jackY += velY;
-
+    velX *= FRICTION; velY *= FRICTION;
+    if (Math.abs(velX) < 0.1 && Math.abs(velY) < 0.1) { velX = 0; velY = 0; return; }
+    jackX += velX; jackY += velY;
     positionJack(jackX, jackY);
     drawCable(jackX, jackY);
-
-    // Vérifier aimant
-    const target = getConsoleTopCenter();
-    const dist = Math.sqrt((jackX - target.x)**2 + (jackY - target.y)**2);
-    if (dist < SNAP_RADIUS) { snapToConsole(); return; }
-
+    const t = getSnapTarget();
+    if (Math.sqrt((jackX-t.x)**2 + (jackY-t.y)**2) < SNAP_RADIUS) { snapToConsole(); return; }
     animFrame = requestAnimationFrame(physics);
   }
 
   // ── DRAG ──
   function startDrag(x, y) {
-    isDragging = true;
     const wasSnapped = isSnapped;
-    isSnapped  = false;
+    isDragging = true; isSnapped = false;
     cancelAnimationFrame(animFrame);
     prevX = x; prevY = y; prevTime = Date.now();
     jackWrap.style.cursor = 'grabbing';
-    // Éteindre dès qu'on débranche
     if (wasSnapped) shutdownConsole();
   }
 
   function moveDrag(x, y) {
     if (!isDragging) return;
-    const now = Date.now();
-    const dt  = Math.max(now - prevTime, 1);
+    const now = Date.now(), dt = Math.max(now - prevTime, 1);
     velX = (x - prevX) / dt * 16;
     velY = (y - prevY) / dt * 16;
     prevX = x; prevY = y; prevTime = now;
-    positionJack(x, y);
-    drawCable(x, y);
+    positionJack(x, y); drawCable(x, y);
   }
 
   function endDrag(x, y) {
     if (!isDragging) return;
     isDragging = false;
     jackWrap.style.cursor = 'grab';
-    const target = getConsoleTopCenter();
-    const dist = Math.sqrt((x - target.x)**2 + (y - target.y)**2);
-    if (dist < SNAP_RADIUS) { snapToConsole(); return; }
-    // Câble débranché → éteindre la console
-    if (isSnapped) { isSnapped = false; shutdownConsole(); }
+    const t = getSnapTarget();
+    if (Math.sqrt((x-t.x)**2 + (y-t.y)**2) < SNAP_RADIUS) { snapToConsole(); return; }
     const maxV = 18;
     velX = Math.max(-maxV, Math.min(maxV, velX));
     velY = Math.max(-maxV, Math.min(maxV, velY));
     animFrame = requestAnimationFrame(physics);
   }
 
-  jackWrap.addEventListener('mousedown',  e => { startDrag(e.clientX, e.clientY); e.preventDefault(); });
-  document.addEventListener('mousemove',  e => moveDrag(e.clientX, e.clientY));
-  document.addEventListener('mouseup',    e => endDrag(e.clientX, e.clientY));
+  jackWrap.addEventListener('mousedown', e => { startDrag(e.clientX, e.clientY); e.preventDefault(); });
+  document.addEventListener('mousemove', e => moveDrag(e.clientX, e.clientY));
+  document.addEventListener('mouseup',   e => endDrag(e.clientX, e.clientY));
 
-  // Touch events — hitzone 60x60 centrée
-  jackWrap.addEventListener('touchstart', e => {
-    e.preventDefault();
-    startDrag(e.touches[0].clientX, e.touches[0].clientY);
-  }, { passive: false });
+  jackWrap.addEventListener('touchstart', e => { e.preventDefault(); startDrag(e.touches[0].clientX, e.touches[0].clientY); }, { passive:false });
+  window.addEventListener('touchmove',    e => { if (isDragging) { e.preventDefault(); moveDrag(e.touches[0].clientX, e.touches[0].clientY); } }, { passive:false });
+  window.addEventListener('touchend',     e => { if (isDragging) endDrag(e.changedTouches[0].clientX, e.changedTouches[0].clientY); });
 
-  window.addEventListener('touchmove', e => {
-    if (!isDragging) return;
-    e.preventDefault();
-    moveDrag(e.touches[0].clientX, e.touches[0].clientY);
-  }, { passive: false });
+  // ── SWING INTRO ──
+  function startSwing() {
+    if (isDragging || !isSnapped) return;
+    const start = getSnapTarget();
+    const duration = 4000, period = 1800, amplitude = 60;
+    const t0 = performance.now();
+    function frame(now) {
+      if (isDragging) return;
+      const elapsed = now - t0;
+      if (elapsed > duration) { initPos(); return; }
+      const decay = 1 - elapsed / duration;
+      const angle = Math.sin((elapsed / period) * Math.PI * 2) * amplitude * decay;
+      positionJack(start.x + angle, start.y + Math.abs(angle) * 0.4 + 20);
+      drawCable(jackX, jackY);
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
 
-  window.addEventListener('touchend', e => {
-    if (!isDragging) return;
-    const t = e.changedTouches[0];
-    endDrag(t.clientX, t.clientY);
-  }, { passive: false });
-
-  // D-pad drag interactif
+  // ── D-PAD ──
   const dpad = document.getElementById('dpad');
   const thumb = document.getElementById('dpadThumb');
+  let dpadDragging = false;
   const maxMove = 12;
-  let dragging = false;
 
-  dpad.addEventListener('mousedown', e => {
-    dragging = true;
-    moveDpad(e);
-    e.preventDefault();
-  });
-
-  document.addEventListener('mousemove', e => {
-    if (!dragging) return;
-    moveDpad(e);
-  });
-
-  document.addEventListener('mouseup', () => {
-    if (!dragging) return;
-    dragging = false;
-    thumb.style.transform = 'translate(-50%, -50%)';
-  });
-
-  function moveDpad(e) {
-    const rect = dpad.getBoundingClientRect();
-    const cx = rect.left + rect.width / 2;
-    const cy = rect.top + rect.height / 2;
-    let dx = e.clientX - cx;
-    let dy = e.clientY - cy;
+  function moveDpad(x, y) {
+    const r = dpad.getBoundingClientRect();
+    let dx = x - (r.left + r.width/2), dy = y - (r.top + r.height/2);
     const dist = Math.sqrt(dx*dx + dy*dy);
-    if (dist > maxMove) {
-      dx = (dx / dist) * maxMove;
-      dy = (dy / dist) * maxMove;
-    }
-    // Snapper aux 4 directions
+    if (dist < 4) { thumb.style.transform = 'translate(-50%,-50%)'; return; }
     const angle = Math.atan2(dy, dx) * 180 / Math.PI;
-    let snapX = 0, snapY = 0;
-    if (dist > 4) {
-      if      (angle > -45  && angle <= 45)   snapX =  maxMove;
-      else if (angle > 45   && angle <= 135)  snapY =  maxMove;
-      else if (angle > 135  || angle <= -135) snapX = -maxMove;
-      else                                     snapY = -maxMove;
-    }
-    thumb.style.transform = `translate(calc(-50% + ${snapX}px), calc(-50% + ${snapY}px))`;
+    let sx = 0, sy = 0;
+    if      (angle > -45  && angle <= 45)  sx =  maxMove;
+    else if (angle > 45   && angle <= 135) sy =  maxMove;
+    else if (angle > 135  || angle <= -135) sx = -maxMove;
+    else                                    sy = -maxMove;
+    thumb.style.transform = `translate(calc(-50% + ${sx}px), calc(-50% + ${sy}px))`;
   }
 
-  // Touch support mobile
-  dpad.addEventListener('touchstart', e => { dragging = true; moveDpadTouch(e); e.preventDefault(); }, {passive:false});
-  dpad.addEventListener('touchmove',  e => { if (dragging) moveDpadTouch(e); e.preventDefault(); }, {passive:false});
-  dpad.addEventListener('touchend',   () => { dragging = false; thumb.style.transform = 'translate(-50%, -50%)'; });
-
-  function moveDpadTouch(e) {
-    const t = e.touches[0];
-    moveDpad({ clientX: t.clientX, clientY: t.clientY });
-  }
-
-  // Son satisfaisant boutons ABXY
-  function playClick(freq) {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.type = 'square';
-    osc.frequency.setValueAtTime(freq, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(freq * 0.5, ctx.currentTime + 0.08);
-    gain.gain.setValueAtTime(0.18, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 0.12);
-  }
-
-  function launchCV() {
-    const flash = document.getElementById('flashOverlay');
-    const out   = document.getElementById('pageOut');
-    flash.classList.add('flash');
-    setTimeout(() => flash.classList.remove('flash'), 150);
-    setTimeout(() => {
-      out.classList.add('fade');
-      setTimeout(() => { window.location.href = 'CV_Portfolio_Aziz_Akkeb_Light.html'; }, 450);
-    }, 120);
-  }
+  dpad.addEventListener('mousedown', e => { dpadDragging = true; moveDpad(e.clientX, e.clientY); e.preventDefault(); });
+  document.addEventListener('mousemove', e => { if (dpadDragging) moveDpad(e.clientX, e.clientY); });
+  document.addEventListener('mouseup', () => { dpadDragging = false; thumb.style.transform = 'translate(-50%,-50%)'; });
+  dpad.addEventListener('touchstart', e => { dpadDragging = true; moveDpad(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); }, { passive:false });
+  document.addEventListener('touchmove', e => { if (dpadDragging) moveDpad(e.touches[0].clientX, e.touches[0].clientY); });
+  document.addEventListener('touchend', () => { dpadDragging = false; thumb.style.transform = 'translate(-50%,-50%)'; });
 
   document.addEventListener('keydown', e => {
-    if (['Enter',' ','ArrowRight','a','b','x','y'].includes(e.key)) launchCV();
+    if (['Enter',' ','ArrowRight'].includes(e.key)) launchCV();
   });
 
 }); // DOMContentLoaded
