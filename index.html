@@ -294,6 +294,27 @@ html{scrollbar-color:var(--sage) var(--green-deep)}
   .panel{transition:box-shadow .35s,transform .35s cubic-bezier(.16,1,.3,1)}
   .m .panel.seen:hover{transform:translateY(-3px)!important;box-shadow:0 2px 0 rgba(0,0,0,.06),0 24px 44px -26px rgba(0,0,0,.7)}
 }
+
+/* motion-v2: the survey draws itself */
+@media (prefers-reduced-motion:no-preference){
+  .m .hero .contours path{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 2.6s cubic-bezier(.65,0,.35,1) forwards}
+  @keyframes draw{to{stroke-dashoffset:0}}
+  .m .name .ln{display:block;overflow:hidden;padding-bottom:.04em}
+  .name .ln,.name .l{color:inherit}
+  .name>.ln{color:var(--paper)}
+  .m .name .l{display:inline-block;transform:translateY(105%);transition:transform 1s cubic-bezier(.16,1,.3,1)}
+  .m.in .name .l{transform:none}
+  .m .hero .name{opacity:1!important;transform:none!important}
+  .m .h2{clip-path:inset(0 100% 0 0);transition:clip-path 1.1s cubic-bezier(.65,0,.35,1)}
+  .m .h2.seen{clip-path:inset(0 0 0 0)}
+  .route-car{position:absolute;left:12px;top:0;width:21px;height:21px;border-radius:50%;background:var(--paper);border:5px solid var(--sage);box-shadow:0 0 0 6px rgba(163,183,170,.18),0 6px 14px -4px rgba(0,0,0,.5);transform:translateY(-50%);pointer-events:none;z-index:2;transition:top .15s linear}
+  @media (max-width:760px){.route-car{left:6px}}
+  .route-car::after{content:"";position:absolute;inset:-11px;border-radius:50%;border:1.5px solid var(--sage);animation:sonar 2.2s cubic-bezier(.16,1,.3,1) infinite}
+  @keyframes sonar{from{transform:scale(.6);opacity:.8}to{transform:scale(1.8);opacity:0}}
+  .leg{transition:background .3s}
+  .leg:hover{background:#ECE8DA}
+  .leg:hover .fig{color:var(--green-deep)}
+}
 </style>
 </head>
 <body>
@@ -661,6 +682,39 @@ html{scrollbar-color:var(--sage) var(--green-deep)}
       function step(t){if(!t0)t0=t;var k=Math.min(1,(t-t0)/1400),v=Math.round(end*(1-Math.pow(1-k,4)));n.textContent=m[1]+v+m[3];if(k<1)requestAnimationFrame(step);}
       setTimeout(function(){requestAnimationFrame(step);},500);});
   });
+})();
+</script>
+
+<script>/* motion-v2 */
+(function(){
+  var h=document.documentElement; if(!h.classList.contains('m'))return;
+  // contours survey themselves in, line by line
+  var ps=document.querySelectorAll('.hero .contours path');
+  ps.forEach(function(p,i){p.setAttribute('pathLength','1');p.style.animationDelay=(i*0.035)+'s';});
+  // name rises letter by letter
+  var n=document.querySelector('.name'); if(n){
+    n.setAttribute('aria-label',n.textContent.replace(/\s+/g,' ').trim());
+    var k=0;
+    function wrap(node){var t=node.textContent.trim();if(!t)return null;var ln=document.createElement('span');ln.className='ln';ln.setAttribute('aria-hidden','true');
+      t.split('').forEach(function(c){var l=document.createElement('span');l.className='l';l.textContent=c;l.style.transitionDelay=(0.05*k++)+'s';ln.appendChild(l);});return ln;}
+    [].slice.call(n.childNodes).forEach(function(c){
+      if(c.nodeType===3){var w=wrap(c);if(w)n.replaceChild(w,c);else n.removeChild(c);}
+      else{var w2=wrap(c);if(w2){c.textContent='';c.appendChild(w2);c.querySelector('.ln').style.display='block';}}
+    });
+  }
+  // headings wipe in
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('seen');io.unobserve(e.target);}});},{threshold:.4});
+  document.querySelectorAll('.h2').forEach(function(x){io.observe(x);});
+  // a traveller rides the route at the ink tip
+  var route=document.getElementById('route'),ink=document.getElementById('route-ink');
+  if(route&&ink){var car=document.createElement('span');car.className='route-car';car.setAttribute('aria-hidden','true');route.appendChild(car);
+    var raf=0;function place(){raf=0;var hgt=parseFloat(ink.style.height)||0;car.style.top=(10+hgt)+'px';car.style.opacity=hgt>2?1:0;}
+    function on(){if(!raf)raf=requestAnimationFrame(place);}
+    window.addEventListener('scroll',on,{passive:true});window.addEventListener('resize',on);setTimeout(place,50);}
+  // deeper sections: terrain parallax
+  var layers=[].map.call(document.querySelectorAll('.itin .contours,#methode .contours,.foot .contours'),function(svg){return {el:svg,base:svg.getAttribute('style')||''};});
+  var r2=0;function par(){r2=0;layers.forEach(function(L){var b=L.el.parentNode.getBoundingClientRect();var y=(b.top+b.height/2-innerHeight/2)*-0.12;L.el.style.transform=(L.base.indexOf('scaleX')>-1?'scaleX(-1) ':L.base.indexOf('scaleY')>-1?'scaleY(-1) ':'')+'translate3d(0,'+y.toFixed(1)+'px,0) scale(1.15)';});}
+  window.addEventListener('scroll',function(){if(!r2)r2=requestAnimationFrame(par);},{passive:true});par();
 })();
 </script>
 </body>
